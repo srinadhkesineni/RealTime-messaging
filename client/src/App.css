@@ -1,0 +1,163 @@
+/* General body styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+  }
+  
+  /* Centering the form and chat view on the screen */
+  .App {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Join Room Container */
+  .joinRoomContainer {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  h3 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  input::placeholder {
+    color: #888;
+  }
+  
+  button {
+    width: 100%;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Chat Container */
+  .chatContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 600px;
+    height: 80vh;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+  }
+  
+  /* Box for displaying chat messages */
+  .chatBox {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Messages from the current user (right side) */
+  .chatMessage.right {
+    background-color: #e6ffe6;
+    margin-left: auto;
+    text-align: right;
+    padding: 10px;
+    border-radius: 10px 10px 0 10px;
+    max-width: 60%;
+    margin-bottom: 10px;
+  }
+  
+  /* Messages from other users (left side) */
+  .chatMessage.left {
+    background-color: #f1f0f0;
+    margin-right: auto;
+    text-align: left;
+    padding: 10px;
+    border-radius: 10px 10px 10px 0;
+    max-width: 60%;
+    margin-bottom: 10px;
+  }
+  
+  /* Text and timestamp formatting inside messages */
+  .chatMessage p {
+    margin: 5px 0;
+  }
+  
+  .chatMessage strong {
+    color: #4caf50;
+  }
+  
+  .chatMessage span {
+    font-size: 0.8rem;
+    color: #999;
+    margin-left: 10px;
+  }
+  
+  /* Input box and send button at the bottom */
+  .messageInput {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .messageInput input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .messageInput button {
+    width: 18%;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .messageInput button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Custom scrollbar for the chat box */
+  .chatBox::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .chatBox::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+  }
+  
