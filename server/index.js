@@ -3,9 +3,11 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
-// const { Socket } = require("dgram");
+const { connectToMongo } = require("./database/connectDB.js");
 
 app.use(cors());
+
+connectToMongo();
 
 const server = http.createServer(app);
 const io = new Server(server, {
