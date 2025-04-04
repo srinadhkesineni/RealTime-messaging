@@ -14,8 +14,8 @@ const roomSchema = new Schema({
       text: {
         type: String,
         required: true,
-        timestamp: { type: Date, default: Date.now },
       },
+      timestamp: { type: Date, default: Date.now },
     },
   ],
 });

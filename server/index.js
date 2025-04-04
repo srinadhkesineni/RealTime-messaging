@@ -4,10 +4,17 @@ const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const { connectToMongo } = require("./database/connectDB.js");
+const userRoute = require("./routes/userRoute.js")
+const messageRoute = require("./routes/messageRoute.js")
+const roomRoute = require("./routes/roomRoute.js")
 
 app.use(cors());
 
 connectToMongo();
+
+app.use(userRoute)
+app.use(messageRoute)
+app.use(roomRoute)
 
 const server = http.createServer(app);
 const io = new Server(server, {

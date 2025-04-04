@@ -1,44 +1,20 @@
-import io from "socket.io-client";
-import "./App.css";
-import { useState } from "react";
-import Chat from "./Chat";
-
-const socket = io.connect("http://localhost:3001");
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Chat from "./components/Chat";
 
 function App() {
-  const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
-  const [isRoomJoined, setIsRoomJoined] = useState(false);
+  return(
 
-  const joinRoom = () => {
-    if (username !== "" && room !== "") {
-      socket.emit("join_room", room);
-      setIsRoomJoined(true); 
-    }
-  };
-
-  return (
-    <div className="App">
-      {!isRoomJoined ? (
-        <div className="joinRoomContainer">
-          <h3>Join a Chat Room</h3>
-          <input
-            type="text"
-            placeholder="Enter your name..."
-            onChange={(event) => setUsername(event.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Enter room ID..."
-            onChange={(event) => setRoom(event.target.value)}
-          />
-          <button onClick={joinRoom}>Enter Room</button>
-        </div>
-      ) : (
-        <Chat socket={socket} username={username} room={room} />
-      )}
-    </div>
-  );
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />}/>
+        <Route path="/signup" element={<Signup />}/>
+        <Route path="/chat" element={<Chat />}/>
+      </Routes>
+    </Router>
+    )
 }
 
 export default App;
