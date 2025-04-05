@@ -1,4 +1,4 @@
-const express = require("mongoose");
+const express = require("express");
 const Message = require("../models/messages");
 const Room = require("../models/room");
 const User = require("../models/user");

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
+import "../App.css";
 import ScrollToBottom from "react-scroll-to-bottom";
+// import socket from "./socket";
 
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState("");

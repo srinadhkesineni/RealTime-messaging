@@ -1,22 +1,29 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handlelogin = async () => {
+  const handlelogin = async (e) => {
+    e.preventDefault(); 
+  
     const userData = { email, password };
+  
     try {
-      const response = await axios.post(
-        "http://localhost:3001/login",
-        userData
-      );
-      if (response === 200) {
-        console.log("login successful");
-      }
+      const response = await axios.post("http://localhost:3001/login", userData);
+  
+      console.log("login successful");
+      navigate("/room");
+  
     } catch (err) {
-      console.log("login failed", err);
+      if (err.response) {
+        console.log("Login failed:", err.response.data.message);
+      } else {
+        console.log("Login error:", err.message);
+      }
     }
   };
 
@@ -41,6 +48,8 @@ function Login() {
           <button type="submit">login</button>
         </form>
       </div>
+      <p>Don't have an account?</p>
+      <button onClick={() => navigate("/signup")}>Signup</button>
     </div>
   );
 }

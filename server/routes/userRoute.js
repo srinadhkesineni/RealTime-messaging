@@ -1,4 +1,4 @@
-const express = require("mongoose");
+const express = require("express");
 const Message = require("../models/messages");
 const Room = require("../models/room");
 const User = require("../models/user");
@@ -24,10 +24,11 @@ router.post("/login", async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "invalid email" });
+      console.log("email not found")
+      return res.status(404).json({ message: "Email not found" });
     }
     if (user.password !== password) {
-      return res.status(400).json({ message: "invalid password" });
+      return res.status(404).json({ message: "password  incorrect" });
     }
     res.status(200).json("successful");
   } catch (err) {

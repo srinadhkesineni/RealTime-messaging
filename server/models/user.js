@@ -14,7 +14,6 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, "passwprd is required"],
-    unique: [true, "password should be unique"],
   },
 });
 
