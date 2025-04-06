@@ -1,53 +1,129 @@
 const Room = require("./models/room");
+const Message = require("./models/messages");
+const User = require("./models/user");
 
-function socketHandler(io) {
+const connectedUsers = {}; // socketId -> roomName
+
+module.exports = function (io) {
   io.on("connection", (socket) => {
     console.log(`User connected: ${socket.id}`);
 
-    socket.on("join_room", async (roomName) => {
-      socket.join(roomName);
-      console.log(`User with ID ${socket.id} joined room: ${roomName}`);
-
+    // Emit current rooms
+    socket.on("get_active_rooms", async () => {
       try {
-        const exists = await Room.findOne({ name: roomName });
+        const rooms = await Room.find({});
+        const roomNames = rooms.map((room) => room.roomName);
+        socket.emit("active_rooms", roomNames);
+      } catch (err) {
+        console.error("Error fetching active rooms:", err);
+      }
+    });
+
+    // Create room
+    socket.on("create_room", async (roomName) => {
+      try {
+        const exists = await Room.findOne({ roomName });
         if (!exists) {
-          await Room.create({ name: roomName });
+          await Room.create({ roomName });
+          io.emit("room_created", roomName);
+          console.log(`Room created: ${roomName}`);
+        } else {
+          socket.emit("room_error", "Room already exists.");
+        }
+      } catch (err) {
+        console.error("Error creating room:", err);
+      }
+    });
+
+    // Join room
+    socket.on("join_room", async (roomName) => {
+      try {
+        const room = await Room.findOne({ roomName });
+        if (room) {
+          socket.join(roomName);
+          connectedUsers[socket.id] = roomName;
+          console.log(`User ${socket.id} joined ${roomName}`);
+        } else {
+          socket.emit("room_error", "Room does not exist.");
         }
       } catch (err) {
         console.error("Error joining room:", err);
       }
     });
 
-    socket.on("send_message", (data) => {
-      socket.to(data.room).emit("receive_message", data);
-    });
+    // Disconnect
 
-    socket.on("leave_room", async (roomName) => {
-      socket.leave(roomName);
-      console.log(`User with ID ${socket.id} left room: ${roomName}`);
+    socket.on("send_message", async (data) => {
+      try {
+        const { room, userId, message } = data;
+        // Find the Room document by name
+        const roomDoc = await Room.findOne({ roomName: room });
+        if (!roomDoc) {
+          console.log(room);
+          return socket.emit("room_error", "Room not found.");
+        }
 
-      const socketsInRoom = await io.in(roomName).fetchSockets();
-      if (socketsInRoom.length === 0) {
-        await Room.deleteOne({ name: roomName });
-        console.log(`Room ${roomName} deleted from DB`);
+        // Find the User document (you should ideally pass the userId or fetch based on socket session)
+        const userDoc = await User.findOne({ email: userId });
+        if (!userDoc) return socket.emit("user_error", "User not found.");
+
+        // Save the message in the Message collection
+        const newMessage = new Message({
+          roomId: roomDoc._id,
+          senderId: userDoc._id,
+          text: message,
+        });
+
+        await newMessage.save();
+        // console.log(newMessage);
+        // Emit the message to everyone in the room
+        io.to(room).emit("receive_message", {
+          room,
+          author,
+          message,
+          time,
+        });
+      } catch (err) {
+        console.error("Error saving message:", err);
       }
     });
 
-    socket.on("disconnecting", async () => {
-      const rooms = Array.from(socket.rooms).filter((r) => r !== socket.id);
-      for (const room of rooms) {
-        const sockets = await io.in(room).fetchSockets();
-        if (sockets.length <= 1) {
-          await Room.deleteOne({ name: room });
-          console.log(`Room ${room} deleted on disconnect`);
+    // Load previous messages
+    socket.on("get_messages", async (roomName) => {
+      try {
+        const room = await Room.findOne({ roomName });
+        if (!room) return;
+
+        const messages = await Message.find({ roomId: room._id }).populate(
+          "senderId",
+          "email"
+        );
+        socket.emit("previous_messages", messages);
+      } catch (err) {
+        console.error("Error getting messages:", err);
+      }
+    });
+
+    socket.on("disconnect", async () => {
+      const roomName = connectedUsers[socket.id];
+      delete connectedUsers[socket.id];
+
+      if (roomName) {
+        try {
+          // Check if any users are still in the room
+          const roomSockets = await io.in(roomName).fetchSockets();
+
+          if (roomSockets.length === 0) {
+            await Room.deleteOne({ roomName });
+            io.emit("room_deleted", roomName);
+            console.log(`Room ${roomName} deleted (empty).`);
+          }
+        } catch (err) {
+          console.error("Error handling disconnect:", err);
         }
       }
-    });
 
-    socket.on("disconnect", () => {
       console.log(`User disconnected: ${socket.id}`);
     });
   });
-}
-
-module.exports = socketHandler;
+};
