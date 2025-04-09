@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
-
+import { useLocation } from "react-router-dom";
 const socket = io("http://localhost:3001");
 
-function RoomSelector({ username }) {
+function RoomSelector() {
+  const location = useLocation();
+  const { username } = location.state || {};
+  
   const [roomToJoin, setRoomToJoin] = useState("");
   const [roomToCreate, setRoomToCreate] = useState("");
   const [rooms, setRooms] = useState([]);
@@ -33,6 +36,7 @@ function RoomSelector({ username }) {
   const joinRoom = () => {
     if (roomToJoin.trim()) {
       socket.emit("join_room", roomToJoin);
+      // console.log(roomToJoin)
       navigate("/chat", { state: { username, room: roomToJoin } });
     }
   };

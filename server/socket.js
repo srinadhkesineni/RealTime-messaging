@@ -56,48 +56,50 @@ module.exports = function (io) {
     socket.on("send_message", async (data) => {
       try {
         const { room, userId, message } = data;
-        // Find the Room document by name
+        console.log(room)
+        // Find Room by name
         const roomDoc = await Room.findOne({ roomName: room });
         if (!roomDoc) {
-          console.log(room);
+          console.log("Room not found:", room);
           return socket.emit("room_error", "Room not found.");
         }
-
-        // Find the User document (you should ideally pass the userId or fetch based on socket session)
-        const userDoc = await User.findOne({ email: userId });
-        if (!userDoc) return socket.emit("user_error", "User not found.");
-
-        // Save the message in the Message collection
+    
+        // Find User by ID
+        const userDoc = await User.findOne({email : userId});
+        if (!userDoc) {
+          return socket.emit("user_error", "User not found.");
+        }
+    
+        // Save Message
         const newMessage = new Message({
           roomId: roomDoc._id,
           senderId: userDoc._id,
           text: message,
         });
-
+    
         await newMessage.save();
-        // console.log(newMessage);
-        // Emit the message to everyone in the room
+    
+        // Emit Message to room
         io.to(room).emit("receive_message", {
-          room,
-          author,
-          message,
-          time,
+          text: newMessage.text,
+          sender: userDoc.email,
+          timestamp: newMessage.timestamp,
         });
+    
       } catch (err) {
         console.error("Error saving message:", err);
       }
     });
-
+    
     // Load previous messages
     socket.on("get_messages", async (roomName) => {
       try {
         const room = await Room.findOne({ roomName });
         if (!room) return;
-
-        const messages = await Message.find({ roomId: room._id }).populate(
-          "senderId",
-          "email"
-        );
+    
+        const messages = await Message.find({ roomId: room._id })
+          .populate("senderId", "email")
+          .sort({ timestamp: 1 });
         socket.emit("previous_messages", messages);
       } catch (err) {
         console.error("Error getting messages:", err);

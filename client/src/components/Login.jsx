@@ -8,16 +8,18 @@ function Login() {
   const navigate = useNavigate();
 
   const handlelogin = async (e) => {
-    e.preventDefault(); 
-  
+    e.preventDefault();
+
     const userData = { email, password };
-  
+
     try {
-      const response = await axios.post("http://localhost:3001/login", userData);
-  
+      const response = await axios.post(
+        "http://localhost:3001/login",
+        userData
+      );
+
       console.log("login successful");
-      navigate("/room");
-  
+      navigate("/room", { state: { username: email } });
     } catch (err) {
       if (err.response) {
         console.log("Login failed:", err.response.data.message);

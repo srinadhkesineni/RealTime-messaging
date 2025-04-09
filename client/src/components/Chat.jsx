@@ -3,8 +3,12 @@ import "../App.css";
 import ScrollToBottom from "react-scroll-to-bottom";
 import socket from "./socket";
 import axios from "axios"; // For optional fallback API calls if needed
+import { useLocation } from "react-router-dom";
 
-function Chat({ username, room, userId }) {
+function Chat() {
+  const location = useLocation();
+  const { username, room } = location.state || {};
+
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
@@ -13,7 +17,7 @@ function Chat({ username, room, userId }) {
     if (currentMessage !== "") {
       const messageData = {
         room,
-        userId,
+        userId:username,
         message: currentMessage,
       };
 
