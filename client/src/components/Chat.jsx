@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../App.css";
 import ScrollToBottom from "react-scroll-to-bottom";
 import socket from "./socket";
-import axios from "axios"; // For optional fallback API calls if needed
 import { useLocation } from "react-router-dom";
 
 function Chat() {
@@ -12,15 +11,15 @@ function Chat() {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
+
   const sendMessage = async () => {
-    console.log(currentMessage);
     if (currentMessage !== "") {
       const messageData = {
         room,
-        userId:username,
+        userId: username,
         message: currentMessage,
       };
-
+      // console.log(messageData);
       await socket.emit("send_message", messageData);
       setCurrentMessage("");
     }
@@ -28,12 +27,13 @@ function Chat() {
 
   useEffect(() => {
     // Fetch previous messages
+
     socket.emit("get_messages", room);
 
     // Receive past messages
     socket.on("previous_messages", (messages) => {
       const formatted = messages.map((msg) => ({
-        author: msg.sender?.email || "Unknown",
+        author: msg.senderId.email || "Unknown",
         message: msg.text,
         time: new Date(msg.timestamp).toLocaleTimeString(),
       }));
@@ -54,7 +54,7 @@ function Chat() {
       socket.off("previous_messages");
       socket.off("receive_message");
     };
-  }, [room]);
+  }, [room, sendMessage]);
 
   return (
     <div className="chatContainer">

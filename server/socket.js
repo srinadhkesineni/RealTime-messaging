@@ -56,47 +56,46 @@ module.exports = function (io) {
     socket.on("send_message", async (data) => {
       try {
         const { room, userId, message } = data;
-        console.log(room)
+        console.log(room);
         // Find Room by name
         const roomDoc = await Room.findOne({ roomName: room });
         if (!roomDoc) {
           console.log("Room not found:", room);
           return socket.emit("room_error", "Room not found.");
         }
-    
+
         // Find User by ID
-        const userDoc = await User.findOne({email : userId});
+        const userDoc = await User.findOne({ email: userId });
         if (!userDoc) {
           return socket.emit("user_error", "User not found.");
         }
-    
+
         // Save Message
         const newMessage = new Message({
           roomId: roomDoc._id,
           senderId: userDoc._id,
           text: message,
         });
-    
+
         await newMessage.save();
-    
+
         // Emit Message to room
         io.to(room).emit("receive_message", {
           text: newMessage.text,
           sender: userDoc.email,
           timestamp: newMessage.timestamp,
         });
-    
       } catch (err) {
         console.error("Error saving message:", err);
       }
     });
-    
+
     // Load previous messages
     socket.on("get_messages", async (roomName) => {
       try {
         const room = await Room.findOne({ roomName });
         if (!room) return;
-    
+
         const messages = await Message.find({ roomId: room._id })
           .populate("senderId", "email")
           .sort({ timestamp: 1 });
