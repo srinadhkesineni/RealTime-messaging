@@ -44,7 +44,7 @@ module.exports = function (io) {
           connectedUsers[socket.id] = roomName;
           console.log(`User ${socket.id} joined ${roomName}`);
         } else {
-          socket.emit("room_error", "Room does not exist.");
+          socket.emit("room_error", "error");
         }
       } catch (err) {
         console.error("Error joining room:", err);

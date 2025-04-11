@@ -7,7 +7,7 @@ const socket = io("http://localhost:3001");
 function RoomSelector() {
   const location = useLocation();
   const { username } = location.state || {};
-  
+
   const [roomToJoin, setRoomToJoin] = useState("");
   const [roomToCreate, setRoomToCreate] = useState("");
   const [rooms, setRooms] = useState([]);
@@ -37,6 +37,11 @@ function RoomSelector() {
     if (roomToJoin.trim()) {
       socket.emit("join_room", roomToJoin);
       // console.log(roomToJoin)
+      socket.on("room_error", async (message) => {
+        if (message === "error") {
+          navigate("/room", { state: { username } });
+        }
+      });
       navigate("/chat", { state: { username, room: roomToJoin } });
     }
   };

@@ -12,7 +12,7 @@ function Chat() {
   const [messageList, setMessageList] = useState([]);
 
 
-  const sendMessage = async () => {
+  const sendMessage = useCallback(async () => {
     if (currentMessage !== "") {
       const messageData = {
         room,
@@ -23,11 +23,10 @@ function Chat() {
       await socket.emit("send_message", messageData);
       setCurrentMessage("");
     }
-  };
+  }, [room, currentMessage, username]);
 
   useEffect(() => {
     // Fetch previous messages
-
     socket.emit("get_messages", room);
 
     // Receive past messages
