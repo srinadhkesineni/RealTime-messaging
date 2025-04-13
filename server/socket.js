@@ -111,13 +111,24 @@ module.exports = function (io) {
 
       if (roomName) {
         try {
-          // Check if any users are still in the room
           const roomSockets = await io.in(roomName).fetchSockets();
 
           if (roomSockets.length === 0) {
-            await Room.deleteOne({ roomName });
-            io.emit("room_deleted", roomName);
-            console.log(`Room ${roomName} deleted (empty).`);
+            // First, find the room to get its _id
+            const room = await Room.findOne({ roomName });
+
+            if (room) {
+              const roomId = room._id;
+
+              // Delete all messages with this roomId
+              await Message.deleteMany({ roomId });
+
+              // Delete the room itself
+              await Room.deleteOne({ _id: roomId });
+
+              io.emit("room_deleted", roomName);
+              console.log(`Room ${roomName} and its messages deleted (empty).`);
+            }
           }
         } catch (err) {
           console.error("Error handling disconnect:", err);
