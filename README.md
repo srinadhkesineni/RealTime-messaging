@@ -6,3 +6,4 @@ need to do
 ->use docker for containorization.
 ->deploy the application
 ->used socket.io
+->use render.com for deployment
