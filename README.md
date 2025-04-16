@@ -7,3 +7,4 @@ need to do
 ->deploy the application
 ->used socket.io
 ->use render.com for deployment
+->testing the app
