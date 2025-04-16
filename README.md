@@ -6,4 +6,4 @@ need to do
 ->use docker for containorization.
 ->deploy the application
 ->used socket.io
-->use render.com for deployment
+->for testing purpose i continously pushing the random code to github 
