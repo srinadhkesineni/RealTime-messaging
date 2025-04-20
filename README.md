@@ -6,4 +6,4 @@ need to do
 ->use docker for containorization.
 ->deploy the application
 ->used socket.io
-->testing ci/cd
+->testing ci/cd from another project
