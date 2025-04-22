@@ -7,3 +7,4 @@ need to do
 ->deploy the application
 ->used socket.io
 ->testing ci/cd from another project
+->deploy in render.com
