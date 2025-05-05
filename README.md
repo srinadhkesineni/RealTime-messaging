@@ -8,4 +8,4 @@ need to do
 ->used socket.io
 ->testing ci/cd from another project
 ->deploy in render.com
-->testing the project using mocha.
+->testing the project using mocha and jest.
