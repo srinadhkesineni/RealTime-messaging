@@ -9,6 +9,7 @@ function Chat() {
   const { username, room } = location.state || {};
 
   const [currentMessage, setCurrentMessage] = useState("");
+  
   const [messageList, setMessageList] = useState([]);
 
   const currentMessageRef = useRef(currentMessage);
