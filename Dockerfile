@@ -1,18 +1,33 @@
-# Use Node.js base image
-FROM node:14
+# Base image
+FROM node:18
 
-# Set working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package*.json ./
+# Copy both client and server package files
+COPY server/package*.json ./server/
+COPY client/package*.json ./client/
+
+# Install server dependencies
+WORKDIR /app/server
 RUN npm install
 
-# Copy the rest of the application code
+# Install and build client
+WORKDIR /app/client
+RUN npm install
+RUN npm run build
+
+# Copy entire repo
+WORKDIR /app
 COPY . .
 
-# Expose the app port
+# Serve static client build with Express (assuming server does this)
+# If not, you'll need to configure your server to serve the build
+# For example, use: app.use(express.static('../client/build'))
+
+# Expose port used by server
 EXPOSE 3000
 
-# Command to start the app
+# Start the server
+WORKDIR /app/server
 CMD ["npm", "start"]
