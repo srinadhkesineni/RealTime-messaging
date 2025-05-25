@@ -6,3 +6,4 @@ need to do
 -> student project is testing logs.
 ->sample.test.js will be run when we do any commits or pull requests.
 ->need to add more unit tests for every piece of code.
+-> changed dockerfile to better performance
