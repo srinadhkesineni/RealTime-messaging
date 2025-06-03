@@ -1,33 +1,20 @@
-# Base image
+# Use official Node image
 FROM node:18
 
 # Set working directory
 WORKDIR /app
 
-# Copy both client and server package files
-COPY server/package*.json ./server/
-COPY client/package*.json ./client/
+# Copy everything into the container
+COPY . .
 
 # Install server dependencies
 WORKDIR /app/server
 RUN npm install
 
-# Install and build client
+# Install client dependencies
 WORKDIR /app/client
 RUN npm install
-RUN npm run build
 
-# Copy entire repo
+# Default command: Run tests in both server and client
 WORKDIR /app
-COPY . .
-
-# Serve static client build with Express (assuming server does this)
-# If not, you'll need to configure your server to serve the build
-# For example, use: app.use(express.static('../client/build'))
-
-# Expose port used by server
-EXPOSE 3000
-
-# Start the server
-WORKDIR /app/server
-CMD ["npm", "start"]
+CMD sh -c "cd server && npm test && cd ../client && npm test"
