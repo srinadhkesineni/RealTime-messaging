@@ -1,9 +1,3 @@
 # RealTime-messaging
-
--> testing ci/cd pipeline on 03/06/25
-
-
--> mocha is not working properly.
--> sockets redirecting
-->updated test files.
-->Autherization successful
+-> i created user logins so that when a user login and add repo it will store in db.
+-> after that when i commit to github it will directly trigger to that particuylar user.
