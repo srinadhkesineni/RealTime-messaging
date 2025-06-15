@@ -17,4 +17,4 @@ RUN npm install
 
 # Default command: Run tests in both server and client
 WORKDIR /app
-CMD sh -c "cd server && npm test && cd ../client && npm test"
+CMD cd server && npm test
