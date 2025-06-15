@@ -5,3 +5,4 @@
 -> user can see the repos in the dashboard after commiting.
 -> docker build is failing.
 -> run tests are not working
+-> docker build failing
