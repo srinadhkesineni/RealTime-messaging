@@ -3,4 +3,5 @@
 -> after that when i commit to github it will directly trigger to that particuylar user.
 -> the repo url will store to particualar user
 -> user can see the repos in the dashboard after commiting.
--> docker build is failing
+-> docker build is failing.
+-> run tests are not working
