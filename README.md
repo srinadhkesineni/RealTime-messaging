@@ -8,3 +8,4 @@
 -> docker build failing
 -> logs are not printing
 -> testing
+-> new testing
