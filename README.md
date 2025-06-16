@@ -7,4 +7,9 @@
 -> run tests are not working
 -> docker build failing
 -> logs are not printing
+<<<<<<< HEAD
 -> testing
+=======
+-> changes made
+-> testing2
+>>>>>>> 00f737455a146d050408d92e835926e89ef70a6f
