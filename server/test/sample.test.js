@@ -2,7 +2,7 @@ const assert = require("assert");
 
 describe("Math operations", () => {
   it("should add numbers correctly", () => {
-    assert.strictEqual(2 + 3, 69);
+    assert.strictEqual(2 + 3, 5);
   });
 
   it("should subtract numbers correctly", () => {
@@ -15,5 +15,8 @@ describe("Math operations", () => {
 
   it("should divide numbers correctly", () => {
     assert.strictEqual(8 / 2, 4);
+  });
+  it("should divide numbers correctly", () => {
+    assert.strictEqual(6 / 2, 3);
   });
 });
