@@ -19,4 +19,7 @@ describe("Math operations", () => {
   it("should divide numbers correctly", () => {
     assert.strictEqual(6 / 2, 3);
   });
+  it("should divide numbers correctly", () => {
+    assert.strictEqual(9 / 3, 3);
+  });
 });
